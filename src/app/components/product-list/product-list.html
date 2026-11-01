@@ -1,0 +1,15 @@
+<div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+</div>
+
+<div *ngIf="isLoading" class="alert alert-info">
+    Loading products...
+</div>
+
+<div *ngIf="!isLoading && !errorMessage && products.length === 0" class="alert alert-warning">
+    No products found.
+</div>
+
+<div *ngFor="let tempProduct of products" class="mb-2">
+    {{ tempProduct.name }}: {{ tempProduct.unitPrice | currency: 'USD' }}
+</div>
