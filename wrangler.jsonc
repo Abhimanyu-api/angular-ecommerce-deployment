@@ -1,0 +1,8 @@
+{
+  "name": "angular-ecommerce-deployment",
+  "compatibility_date": "2026-11-07",
+  "assets": {
+    "directory": "./dist/angular-ecommerce/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
