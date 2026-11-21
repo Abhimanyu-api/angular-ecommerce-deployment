@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductCategory } from '../../common/product-category';
@@ -12,7 +12,7 @@ import { ProductService } from '../../services/product';
 })
 export class ProductCategoryMenu implements OnInit {
 
-  productCategories: ProductCategory[] = [];
+  productCategories = signal<ProductCategory[]>([]);
 
   constructor(private productService: ProductService) { }
 
@@ -23,7 +23,7 @@ export class ProductCategoryMenu implements OnInit {
     this.productService.getProductCategories().subscribe(
       data => {
         console.log('Product Categories = ' + JSON.stringify(data));
-        this.productCategories = data;
+        this.productCategories.set(data);
       }
     );
   }
