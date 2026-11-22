@@ -46,6 +46,9 @@ export class Checkout implements OnInit, AfterViewInit {
   displayError: HTMLElement | null = null;
 
   isDisabled: boolean = false;
+  purchaseResult: 'success' | 'error' | null = null;
+  orderTrackingNumber: string | null = null;
+  purchaseErrorMessage = '';
 
   constructor(private formBuilder: FormBuilder,
               private luv2ShopFormService: Luv2ShopForm,
@@ -246,6 +249,10 @@ setupStripePaymentForm() {
       return;
     }
 
+    this.purchaseResult = null;
+    this.orderTrackingNumber = null;
+    this.purchaseErrorMessage = '';
+
     // console.log(this.checkoutFormGroup.get('customer')?.value);
     // console.log("The email address is " + this.checkoutFormGroup.get('customer')?.value.email);
 
@@ -335,27 +342,24 @@ setupStripePaymentForm() {
             }, { handleActions: false })
             .then((result: any) => {
               if (result.error) {
-                // inform the customer there was an error
-                alert(`There was an error: ${result.error.message}`);
-                this.isDisabled = false;
+                this.showPurchaseError(result.error.message);
               } else {
                 // call rest API via CheckoutService
                 this.checkoutService.placeOrder(purchase).subscribe({
                   next: (response: any) => {
-                    alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
-
-                    // reset cart
-                    this.resetCart();
+                    this.orderTrackingNumber = response.orderTrackingNumber;
+                    this.purchaseResult = 'success';
                     this.isDisabled = false;
                   },
                   error: (err: any) => {
-                    alert(`There was an error: ${err.message}`);
-                    this.isDisabled = false;
+                    this.showPurchaseError(this.getErrorMessage(err));
                   }
                 });
               }
-            }/* .bind(this) */);
-        }
+            })
+            .catch((error: unknown) => this.showPurchaseError(this.getErrorMessage(error)));
+        },
+        (error: unknown) => this.showPurchaseError(this.getErrorMessage(error))
       );
     } else {
       this.checkoutFormGroup.markAllAsTouched();
@@ -380,6 +384,48 @@ setupStripePaymentForm() {
     );
     */
 
+  }
+
+  private showPurchaseError(message: string): void {
+    this.purchaseErrorMessage = message;
+    this.purchaseResult = 'error';
+    this.isDisabled = false;
+  }
+
+  private getErrorMessage(error: unknown): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const responseError = (error as { error?: { message?: unknown } }).error;
+      if (typeof responseError?.message === 'string') {
+        return responseError.message;
+      }
+    }
+
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      const message = (error as { message?: unknown }).message;
+      if (typeof message === 'string') {
+        return message;
+      }
+    }
+
+    return 'We could not complete your purchase. Please try again.';
+  }
+
+  closePurchaseResult(): void {
+    this.purchaseResult = null;
+  }
+
+  dismissPurchaseResult(): void {
+    if (this.purchaseResult === 'success') {
+      this.finishPurchase();
+      return;
+    }
+
+    this.closePurchaseResult();
+  }
+
+  finishPurchase(): void {
+    this.purchaseResult = null;
+    this.resetCart();
   }
 
   resetCart() {

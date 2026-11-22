@@ -1,0 +1,134 @@
+.purchase-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.purchase-dialog {
+  position: relative;
+  width: min(100%, 30rem);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1.5rem 4rem rgba(15, 23, 42, 0.24);
+  text-align: center;
+  animation: purchase-dialog-appear 180ms ease-out;
+}
+
+.purchase-dialog-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.purchase-result-icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.25rem;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.purchase-dialog-success .purchase-result-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.purchase-dialog-error .purchase-result-icon {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.purchase-eyebrow {
+  margin-bottom: 0.4rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.purchase-dialog h2 {
+  margin-bottom: 0.75rem;
+  color: #172033;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.purchase-dialog-message {
+  margin: 0 auto 1.5rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.tracking-number {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.65rem;
+  background: #f8fafc;
+}
+
+.tracking-number span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.tracking-number strong {
+  color: #172033;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.purchase-dialog-action {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+}
+
+.purchase-dialog-action:hover {
+  background: #0b5ed7;
+}
+
+.purchase-dialog-action:focus-visible,
+.purchase-dialog-close:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+@keyframes purchase-dialog-appear {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .purchase-dialog {
+    padding: 2.25rem 1.5rem 1.5rem;
+  }
+}

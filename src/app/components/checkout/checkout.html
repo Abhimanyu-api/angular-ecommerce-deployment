@@ -450,4 +450,45 @@
       </form>
     </div>
   </div>
+
+  <div *ngIf="purchaseResult" class="purchase-dialog-backdrop" role="presentation">
+    <section
+      class="purchase-dialog"
+      [class.purchase-dialog-success]="purchaseResult === 'success'"
+      [class.purchase-dialog-error]="purchaseResult === 'error'"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="purchaseResult === 'success' ? 'purchase-success-title' : 'purchase-error-title'">
+      <button
+        type="button"
+        class="purchase-dialog-close"
+        aria-label="Close"
+        (click)="dismissPurchaseResult()">
+        &times;
+      </button>
+
+      <div class="purchase-result-icon" aria-hidden="true">
+        <span *ngIf="purchaseResult === 'success'">&#10003;</span>
+        <span *ngIf="purchaseResult === 'error'">!</span>
+      </div>
+
+      <ng-container *ngIf="purchaseResult === 'success'; else purchaseError">
+        <p class="purchase-eyebrow">Order confirmed</p>
+        <h2 id="purchase-success-title">Thank you for your purchase!</h2>
+        <p class="purchase-dialog-message">Your order has been placed successfully. We’ll send updates to your email as it is prepared.</p>
+        <div class="tracking-number">
+          <span>Order tracking number</span>
+          <strong>{{ orderTrackingNumber }}</strong>
+        </div>
+        <button type="button" class="purchase-dialog-action" (click)="finishPurchase()">Continue shopping</button>
+      </ng-container>
+
+      <ng-template #purchaseError>
+        <p class="purchase-eyebrow">Payment not completed</p>
+        <h2 id="purchase-error-title">We couldn’t place your order</h2>
+        <p class="purchase-dialog-message">{{ purchaseErrorMessage }}</p>
+        <button type="button" class="purchase-dialog-action" (click)="closePurchaseResult()">Return to checkout</button>
+      </ng-template>
+    </section>
+  </div>
 </div>
