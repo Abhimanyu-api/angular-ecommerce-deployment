@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormGroupName, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Luv2ShopForm } from '../../services/luv2-shop-form';
@@ -54,7 +54,8 @@ export class Checkout implements OnInit, AfterViewInit {
               private luv2ShopFormService: Luv2ShopForm,
               private cartService: Cart,
               private checkoutService: CheckoutService,
-              private router: Router) { }
+              private router: Router,
+              private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
 
@@ -350,6 +351,7 @@ setupStripePaymentForm() {
                     this.orderTrackingNumber = response.orderTrackingNumber;
                     this.purchaseResult = 'success';
                     this.isDisabled = false;
+                    this.changeDetector.markForCheck();
                   },
                   error: (err: any) => {
                     this.showPurchaseError(this.getErrorMessage(err));
@@ -390,6 +392,7 @@ setupStripePaymentForm() {
     this.purchaseErrorMessage = message;
     this.purchaseResult = 'error';
     this.isDisabled = false;
+    this.changeDetector.markForCheck();
   }
 
   private getErrorMessage(error: unknown): string {
